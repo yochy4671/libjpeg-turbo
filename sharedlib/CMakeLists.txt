@@ -77,7 +77,7 @@ add_library(cjpeg16 OBJECT ../rdgif.c ../rdppm.c)
 set_property(TARGET cjpeg16 PROPERTY COMPILE_FLAGS
   "-DBITS_IN_JSAMPLE=16 -DGIF_SUPPORTED -DPPM_SUPPORTED")
 add_executable(cjpeg ../cjpeg.c ../cdjpeg.c ../rdbmp.c ../rdgif.c ../rdppm.c
-  ../rdswitch.c ../rdtarga.c $<TARGET_OBJECTS:cjpeg12>
+  ../rdswitch.c ../rdtarga.c ../rdjpeg.c $<TARGET_OBJECTS:cjpeg12>
   $<TARGET_OBJECTS:cjpeg16>)
 set_property(TARGET cjpeg PROPERTY COMPILE_FLAGS ${CDJPEG_COMPILE_FLAGS})
 target_link_libraries(cjpeg jpeg)

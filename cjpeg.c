@@ -78,7 +78,7 @@ static const char * const cdjpeg_message_table[] = {
  */
 
 static boolean is_targa;        /* records user -targa switch */
-
+static boolean is_jpeg;
 
 LOCAL(cjpeg_source_ptr)
 select_file_type(j_compress_ptr cinfo, FILE *infile)
@@ -135,6 +135,9 @@ select_file_type(j_compress_ptr cinfo, FILE *infile)
   case 0x00:
     return jinit_read_targa(cinfo);
 #endif
+  case 0xff:
+    is_jpeg = TRUE;
+    return jinit_read_jpeg(cinfo);
   default:
     ERREXIT(cinfo, JERR_UNKNOWN_FORMAT);
     break;
@@ -795,7 +798,10 @@ main(int argc, char **argv)
 #ifdef C_LOSSLESS_SUPPORTED
     while (cinfo.next_scanline < cinfo.image_height) {
       num_scanlines = (*src_mgr->get_pixel_rows) (&cinfo, src_mgr);
-      (void)jpeg16_write_scanlines(&cinfo, src_mgr->buffer16, num_scanlines);
+      if (is_jpeg)
+        (void)jpeg_write_raw_data(&cinfo, src_mgr->plane_pointer, num_scanlines);
+      else
+        (void)jpeg16_write_scanlines(&cinfo, src_mgr->buffer16, num_scanlines);
     }
 #else
     ERREXIT1(&cinfo, JERR_BAD_PRECISION, cinfo.data_precision);
@@ -803,12 +809,18 @@ main(int argc, char **argv)
   } else if (cinfo.data_precision == 12) {
     while (cinfo.next_scanline < cinfo.image_height) {
       num_scanlines = (*src_mgr->get_pixel_rows) (&cinfo, src_mgr);
-      (void)jpeg12_write_scanlines(&cinfo, src_mgr->buffer12, num_scanlines);
+      if (is_jpeg)
+        (void)jpeg_write_raw_data(&cinfo, src_mgr->plane_pointer, num_scanlines);
+      else
+        (void)jpeg12_write_scanlines(&cinfo, src_mgr->buffer12, num_scanlines);
     }
   } else {
     while (cinfo.next_scanline < cinfo.image_height) {
       num_scanlines = (*src_mgr->get_pixel_rows) (&cinfo, src_mgr);
-      (void)jpeg_write_scanlines(&cinfo, src_mgr->buffer, num_scanlines);
+      if (is_jpeg)
+        (void)jpeg_write_raw_data(&cinfo, src_mgr->plane_pointer, num_scanlines);
+      else
+        (void)jpeg_write_scanlines(&cinfo, src_mgr->buffer, num_scanlines);
     }
   }
 

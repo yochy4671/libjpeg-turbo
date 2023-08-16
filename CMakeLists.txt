@@ -749,7 +749,7 @@ if(ENABLE_STATIC)
   set_property(TARGET cjpeg16-static PROPERTY COMPILE_FLAGS
     "-DBITS_IN_JSAMPLE=16 -DGIF_SUPPORTED -DPPM_SUPPORTED")
   add_executable(cjpeg-static cjpeg.c cdjpeg.c rdbmp.c rdgif.c rdppm.c
-    rdswitch.c rdtarga.c $<TARGET_OBJECTS:cjpeg12-static>
+    rdswitch.c rdtarga.c rdjpeg.c $<TARGET_OBJECTS:cjpeg12-static>
     $<TARGET_OBJECTS:cjpeg16-static>)
   set_property(TARGET cjpeg-static PROPERTY COMPILE_FLAGS
     ${CDJPEG_COMPILE_FLAGS})

@@ -43,6 +43,9 @@ struct cjpeg_source_struct {
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   JDIMENSION max_pixels;
 #endif
+
+  // For reading JPEG
+  JSAMPARRAY plane_pointer[4];
 };
 
 
@@ -128,6 +131,7 @@ EXTERN(cjpeg_source_ptr) j12init_read_ppm(j_compress_ptr cinfo);
 #ifdef C_LOSSLESS_SUPPORTED
 EXTERN(cjpeg_source_ptr) j16init_read_ppm(j_compress_ptr cinfo);
 #endif
+EXTERN(cjpeg_source_ptr) jinit_read_jpeg JPP((j_compress_ptr cinfo));
 EXTERN(djpeg_dest_ptr) jinit_write_ppm(j_decompress_ptr cinfo);
 EXTERN(djpeg_dest_ptr) j12init_write_ppm(j_decompress_ptr cinfo);
 #ifdef D_LOSSLESS_SUPPORTED
